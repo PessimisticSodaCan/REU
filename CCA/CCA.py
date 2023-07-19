@@ -6,8 +6,7 @@ import seaborn as sns
 import numpy as np
 
 link2data = "/Users/sebastian/Downloads/archive/CCA/test.csv"
-df = pd.read_csv(link2data)
-df =df.dropna()
+df = pd.read_csv(link2data).dropna()
 df.head()
 
 X = df[['Lon','Lat']]
@@ -25,10 +24,11 @@ X.loc[:, 'Lat'] = (X.loc[:, 'Lat'] - latMean) / latStd
 
 print(X.head())
 
-Y = df[['#Time', '#Date']]
+Y = df[['Hours', 'Minutes', 'Day']]
 print(Y.head())
 
 ca = CCA(n_components=2)
+
 ca.fit(X, Y)
 X_c, Y_c = ca.transform(X, Y)
 print(X_c.shape)
@@ -42,6 +42,8 @@ cc_res = pd.DataFrame({"CCX_1":X_c[:, 0],
                        "CCY_2":Y_c[:, 1]})
 
 print(cc_res.head())
+
+
 
 first = np.corrcoef(X_c[:, 0], Y_c[:, 0])
 print(first)
@@ -58,11 +60,3 @@ plt.title('Comp. 1, corr = %.2f' %
          np.corrcoef(X_c[:, 0], Y_c[:, 0])[0, 1])
 plt.show()
 
-plt.figure(figsize=(10,8))
-sns.boxplot(x="Species",
-            y="CCX_1",
-            data=cc_res)
-sns.stripplot(x="Species",
-              y="CCX_1",
-              data=cc_res)
-plt.show()

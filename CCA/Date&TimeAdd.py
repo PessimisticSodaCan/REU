@@ -3,15 +3,13 @@ import pandas as pd
 # Read the CSV file into a DataFrame
 df = pd.read_csv('/Users/sebastian/Downloads/archive/CCA/merged Uber Data.csv')
 
+print(df.head())
+
 # Split the datetime values by the space character and select the time component
-df['Time'] = df['Date/Time'].apply(lambda x: x.split(' ')[1])
-df['Date'] = df['Date/Time'].apply(lambda x: x.split(' ')[0])
-df['#Date'] = df['Date'].str.replace('/', '')
-df['#Date'] = df['#Date'].astype('int')
-df['#Time'] = df['Time'].str.replace(':', '')
-df['#Tate'] = df['#Time'].astype('int')
+df[['Date', 'Time']] = df['Date/Time'].str.split(' ', expand=True)
 
-
+df[['Hours', 'Minutes','Sec']] = df['Time'].str.split(':',expand=True)
+df[['Month', 'Day','Year']] = df['Date'].str.split('/',expand=True)
 
 
 
