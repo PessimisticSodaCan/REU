@@ -15,16 +15,14 @@ minT = df['#Time'].min()
 minLon = int(df['Lon'].min() * 1000)
 minLat = int(df['Lat'].min() * 1000)
 
-
 maxT = df['#Time'].max()
 maxLon = int(df['Lon'].max() * 1000)
 maxLat = int(df['Lat'].max() * 1000)
 
-
-RangeT = (maxT - minT)/dimension
-RangeLon = (maxLon - minLon)/dimension
-RangeLat = (maxLat - minLat)/dimension
-#(Time,weekday,lat,long)
+RangeT = (maxT - minT) / dimension
+RangeLon = (maxLon - minLon) / dimension
+RangeLat = (maxLat - minLat) / dimension
+# (Time,weekday,lat,long)
 shape = (dimension + 1, 7, dimension + 1, dimension + 1)
 # Initialize a numpy array with zeros
 arr = np.zeros(shape)
@@ -42,26 +40,19 @@ with open(link2data, 'r') as file:
             i = i + 1
             continue
 
-        index = (int((int(row[6]) - minT)/RangeT), int(row[7]), int((int(1000 * float(row[1])) - minLat)/RangeLat), int((int(1000 * float(row[2])) - minLon)/RangeLon) )
-        X[index] =+ 1
+        index = (int((int(row[6]) - minT) / RangeT), int(row[7]), int((int(1000 * float(row[1])) - minLat) / RangeLat),
+                 int((int(1000 * float(row[2])) - minLon) / RangeLon))
+        X[index] = + 1
         # Access individual values using row[index]
 
     X_numpy = tl.to_numpy(X)
     count = 0
     # Loop through the array
-    for i in range(X_numpy.shape[0]):
-        for j in range(X_numpy.shape[1]):
-            for k in range(X_numpy.shape[2]):
-                for l in range(X_numpy.shape[3]):
-                    # Access and process each element
-                    element = X_numpy[i, j, k, l]
-                    if element == 0:
-                        count += 1
-                    else:
-                        print(element)
-                        print([i, j, k, l])
 
+from tensorly.decomposition import parafac
 
-
+factors = parafac(X, rank=2)
+for f in factors:
+    print(f)
 
 
